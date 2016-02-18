@@ -13,6 +13,24 @@ var keyActions = {
       actionType: "REMOVE_NOTE",
       noteName: noteName
     });
+  },
+
+  removeAllNotes: function () {
+    Dispatcher.dispatch({
+      actionType: "REMOVE_ALL_NOTES"
+    });
+  },
+
+  startPlaying: function () {
+    Dispatcher.dispatch({
+      actionType: "START_PLAYBACK"
+    });
+  },
+
+  stopPlaying: function () {
+    Dispatcher.dispatch({
+      actionType: "STOP_PLAYBACK"
+    });
   }
 };
 

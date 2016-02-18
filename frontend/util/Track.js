@@ -1,4 +1,5 @@
 var KeyStore = require('../stores/KeyStore');
+var KeyActions = require('../actions/KeyActions');
 
 var ctx = new AudioContext();
 
@@ -22,6 +23,35 @@ Track.prototype.addNotes = function (notes) {
 
 Track.prototype.stopRecording = function () {
   this.addNotes([]);
+};
+
+Track.prototype.play = function () {
+  if (this.roll.length === 0) {
+    this.stop();
+    return;
+  }
+  KeyActions.startPlaying();
+  var now = ctx.currentTime;
+  var eventQueue = this.roll.slice();
+  var currentEvent = eventQueue.shift();
+  var that = this;
+  this.intervalId = setInterval(function() {
+    var elapsedTime = ctx.currentTime - now;
+    if (currentEvent.timeSlice <= elapsedTime) {
+      KeyActions.removeAllNotes();
+      currentEvent.notes.forEach(function (note) {
+        KeyActions.addNote(note);
+      });
+      currentEvent = eventQueue.shift();
+      if (!currentEvent) { that.stop(); }
+    }
+
+  }, 1);
+};
+
+Track.prototype.stop = function () {
+  clearInterval(this.intervalId);
+  KeyActions.stopPlaying();
 };
 
 module.exports = Track;

@@ -6,12 +6,18 @@ var Recorder = React.createClass({
   getInitialState: function() {
     return {
       isRecording: false,
-      track: new Track({name: "1"})
+      track: new Track({name: "1"}),
+      isPlaying: false
     };
   },
 
   componentDidMount: function () {
     KeyStore.addListener(this.recordNotes);
+    KeyStore.addListener(this.checkPlayBackStatus);
+  },
+
+  checkPlayBackStatus: function () {
+    this.setState({isPlaying: KeyStore.getPlayBackStatus()});
   },
 
   recordNotes: function () {
@@ -33,12 +39,22 @@ var Recorder = React.createClass({
     this.setState({isRecording: !isRecording});
   },
 
+  playbackHandler: function () {
+    var isPlaying = this.state.isPlaying;
+    if (isPlaying) {
+      this.state.track.stop();
+    } else {
+      this.state.track.play();
+    }
+  },
+
   render: function() {
     var buttonText = this.state.isRecording ? "stop" : "start";
+    var playButtonText = this.state.isPlaying ? "stop track" : "play track";
     return (
       <div>
         <button onClick={this.clickHandler}>{buttonText}</button>
-        <button onClick={this.playTrack}>Play Track</button>
+        <button onClick={this.playbackHandler}>{playButtonText}</button>
       </div>
     );
   }
