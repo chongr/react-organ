@@ -2,7 +2,7 @@ var Dispatcher = require("../dispatcher/Dispatcher");
 var Store = require("flux/utils").Store;
 
 var _currentNotes = [];
-var _isPlaying = false;
+
 var keyStore = new Store(Dispatcher);
 
 keyStore.__onDispatch = function (payload) {
@@ -21,14 +21,7 @@ keyStore.__onDispatch = function (payload) {
       removeAllNotes();
       keyStore.__emitChange();
       break;
-    case "START_PLAYBACK":
-      _isPlaying = true;
-      keyStore.__emitChange();
-      break;
-    case "STOP_PLAYBACK":
-      _isPlaying = false;
-      keyStore.__emitChange();
-      break;
+
   }
 };
 
@@ -58,8 +51,5 @@ keyStore.allNotes = function() {
   return _currentNotes.slice();
 };
 
-keyStore.getPlayBackStatus = function () {
-  return _isPlaying;
-};
 
 module.exports = keyStore;

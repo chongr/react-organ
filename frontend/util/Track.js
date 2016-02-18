@@ -23,6 +23,7 @@ Track.prototype.addNotes = function (notes) {
 
 Track.prototype.stopRecording = function () {
   this.addNotes([]);
+  KeyActions.saveTrack(this);
 };
 
 Track.prototype.play = function () {
@@ -30,7 +31,7 @@ Track.prototype.play = function () {
     this.stop();
     return;
   }
-  KeyActions.startPlaying();
+  KeyActions.startPlaying(this);
   var now = ctx.currentTime;
   var eventQueue = this.roll.slice();
   var currentEvent = eventQueue.shift();
@@ -51,7 +52,8 @@ Track.prototype.play = function () {
 
 Track.prototype.stop = function () {
   clearInterval(this.intervalId);
-  KeyActions.stopPlaying();
+  KeyActions.stopPlaying(this);
+  KeyActions.removeAllNotes();
 };
 
 module.exports = Track;

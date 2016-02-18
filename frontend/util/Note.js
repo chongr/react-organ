@@ -6,6 +6,15 @@ var createOscillator = function (freq) {
   osc.frequency.value = freq;
   osc.detune.value = 0;
   osc.start(ctx.currentTime);
+
+  var mod = ctx.createOscillator();
+  var modIdx = ctx.createGain();
+  mod.frequency.value = 0.5 * freq;
+  modIdx.gain.value = 1000;
+  mod.connect(modIdx);
+  modIdx.connect(osc.frequency);
+  mod.start();
+
   return osc;
 };
 
